@@ -9,11 +9,12 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import sai.com.mymovies.MainActivity;
 import sai.com.mymovies.R;
 import sai.com.mymovies.data.MovieFields;
+import sai.com.mymovies.model.Movie;
 
 /**
  * Created by krrish on 22/01/2017.
@@ -31,9 +32,8 @@ public class GridviewAdapter extends CursorAdapter {
 
     }
 
-    public GridviewAdapter(Context context, Cursor c, boolean autoRequery) {
-        super(context, c, autoRequery);
-    }
+
+
  /*
     @Override
     public int getCount() {
@@ -76,10 +76,33 @@ public class GridviewAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         imageView= (ImageView) view.findViewById(R.id.imageView);
-        Glide
-                .with(context)
+
+        Picasso.with(context)
                 .load(MainActivity.IMAGE_BASE_URL + "w185/" + cursor.getString(cursor.getColumnIndex(MovieFields.Column_posterPath)))
                 .into(imageView);
+       /* Glide
+                .with(context)
+                .load(MainActivity.IMAGE_BASE_URL + "w185/" + cursor.getString(cursor.getColumnIndex(MovieFields.Column_posterPath)))
+                .into(imageView);*/
         Log.d(cursor.getString(cursor.getColumnIndex(MovieFields.Column_movieType)),cursor.getString(cursor.getColumnIndex(MovieFields.Column_TITLE)));
+    }
+
+    public Movie.results get(int position) {
+        Cursor cursor = getCursor();
+        Movie.results movieObject = new Movie.results();
+        if(cursor.moveToPosition(position)) {
+            movieObject.setId(cursor.getInt(cursor.getColumnIndex(MovieFields.Column_movieId)));
+            movieObject.setOriginal_title(cursor.getString(cursor.getColumnIndex(MovieFields.Column_TITLE)));
+            movieObject.setVote_count(cursor.getInt(cursor.getColumnIndex(MovieFields.Column_voteCount)));
+            movieObject.setVote_average(cursor.getInt(cursor.getColumnIndex(MovieFields.Column_voteAverage)));
+            movieObject.setBackdrop_path(cursor.getString(cursor.getColumnIndex(MovieFields.Column_backdropPath)));
+            movieObject.setOriginal_language(cursor.getString(cursor.getColumnIndex(MovieFields.Column_language)));
+            movieObject.setPopularity(cursor.getInt(cursor.getColumnIndex(MovieFields.Column_popularity)));
+            movieObject.setOverview(cursor.getString(cursor.getColumnIndex(MovieFields.Column_overview)));
+            movieObject.setRelease_date(cursor.getString(cursor.getColumnIndex(MovieFields.Column_releaseDate)));
+            movieObject.setPoster_path(cursor.getString(cursor.getColumnIndex(MovieFields.Column_posterPath)));
+        }
+
+        return movieObject;
     }
 }

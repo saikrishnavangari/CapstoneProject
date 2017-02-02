@@ -23,15 +23,16 @@ import sai.com.mymovies.utiities.NetworkUtilities;
 public class SyncMoviesData {
     private static final String LOG_TAG = SyncMoviesData.class.getSimpleName();
     private Context mContext;
-    private String movie_type;
+    private String mMovie_type;
+    private Call<Movie> mCall;
 
     public void getMoviesData(String movie_type, Context context) {
         mContext = context;
-        this.movie_type = movie_type;
+        this.mMovie_type = movie_type;
         MovieEndpoints movieEndpointsService = NetworkUtilities.getClient();
 
-        Call<Movie> call = movieEndpointsService.getMovies(movie_type, MainActivity.API_KEY);
-        call.enqueue(new Callback<Movie>() {
+        mCall = movieEndpointsService.getMovies(movie_type, MainActivity.API_KEY);
+        mCall.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 Movie moviesResponse = response.body();
@@ -40,6 +41,7 @@ public class SyncMoviesData {
                 for (Movie.results movie :moviesList) {
                     Log.d(LOG_TAG, movie.toString());
                 }*/
+                ((MoviesDataJobService) mContext).jobCompleted();
             }
 
             @Override
@@ -48,12 +50,17 @@ public class SyncMoviesData {
             }
         });
 
+}
+    public void onServiceCancelled(){
+        mCall.cancel();
     }
-
-
     void saveData(List<Movie.results> movies) {
+        String selection= MovieFields.Column_movieType+"=?";
+        String[] selectionArgs=new String[]{mMovie_type};
+        mContext.getContentResolver().delete(MoviesProvider.Movies.CONTENT_URI,selection,selectionArgs);
         ContentValues values = new ContentValues();
         for (Movie.results movie : movies) {
+            Log.d("jobservice movietype :"+mMovie_type, movie.getOriginal_title());
             values.put(MovieFields.Column_movieId, movie.getId());
             values.put(MovieFields.Column_TITLE, movie.getTitle());
             values.put(MovieFields.Column_voteCount, movie.getVote_count());
@@ -64,7 +71,7 @@ public class SyncMoviesData {
             values.put(MovieFields.Column_language, movie.getOriginal_language());
             values.put(MovieFields.Column_backdropPath, movie.getBackdrop_path());
             values.put(MovieFields.Column_releaseDate, movie.getRelease_date());
-            values.put(MovieFields.Column_movieType, movie_type);
+            values.put(MovieFields.Column_movieType, mMovie_type);
             mContext.getContentResolver().insert(MoviesProvider.Movies.CONTENT_URI,values);
         }
 

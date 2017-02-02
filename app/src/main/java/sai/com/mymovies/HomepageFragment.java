@@ -69,8 +69,9 @@ public class HomepageFragment extends android.support.v4.app.Fragment implements
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent DetailActivity = new Intent(getActivity(), sai.com.mymovies.DetailActivity.class);
-                startActivity(DetailActivity);
+                Intent DetailActivityIntent = new Intent(getActivity(), DetailActivity.class);
+                DetailActivityIntent.putExtra(DetailActivity.EXTRA_MOVIEOBJECT, mGridviewAdapter.get(position));
+                startActivity(DetailActivityIntent);
             }
         });
         return view;
@@ -119,8 +120,8 @@ public class HomepageFragment extends android.support.v4.app.Fragment implements
     @Override
     public void onLoadFinished(android.support.v4.content.Loader loader, Cursor data) {
         Log.d(LOG_TAG+"count cursor", String.valueOf(data.getCount()));
-        GridviewAdapter adapter=new GridviewAdapter(getContext(),data);
-        gridview.setAdapter(adapter);
+         mGridviewAdapter=new GridviewAdapter(getContext(),data);
+        gridview.setAdapter(mGridviewAdapter);
     }
 
     @Override

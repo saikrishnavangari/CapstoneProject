@@ -1,68 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <View
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/trailer_height" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:paddingStart="8dp"
-         android:background="@color/titleTextBackground"
-        tools:text="Gautamiputrasathakarni"
-        android:textColor="@color/titleText"
-        android:paddingLeft="8dp" />
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnCount="1"
-        android:orientation="vertical"
-        android:rowCount="1">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            android:src="@mipmap/ic_launcher"/>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp">
+            android:orientation="vertical">
+
+            <fragment android:name="com.google.android.youtube.player.YouTubePlayerFragment"
+                android:id="@+id/youtubeplayer_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
 
             <TextView
-                android:id="@+id/rating_tv"
-                android:layout_width="wrap_content"
+                android:id="@+id/title_tv"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/titleTextBackground"
+                android:gravity="center_vertical"
+                android:paddingEnd="@dimen/activity_horizontal_spacing"
+                android:paddingLeft="@dimen/activity_horizontal_spacing"
+                android:paddingRight="@dimen/activity_horizontal_spacing"
+                android:paddingStart="@dimen/activity_horizontal_spacing"
+                android:textColor="@color/titleText"
+                tools:text="Gautamiputrasathakarni" />
+
+            <GridLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="hello whats up" />
+                android:layout_marginEnd="@dimen/activity_horizontal_spacing"
+                android:layout_marginStart="@dimen/activity_horizontal_spacing"
+                android:layout_marginTop="8dp"
+                android:columnCount="1"
+                android:orientation="vertical"
+                android:rowCount="1">
+
+                <ImageView
+                    android:id="@+id/movieposter_iv"
+                    android:layout_width="150dp"
+                    android:layout_height="200dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/ic_launcher" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/eightdp"
+                    android:layout_marginStart="@dimen/eightdp">
+
+                    <TextView
+                        android:id="@+id/rating_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="hello whats up" />
+
+                    <TextView
+                        android:id="@+id/movielength_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/rating_tv"
+                        android:layout_gravity=""
+                        tools:text="hello whats up" />
+                </RelativeLayout>
+            </GridLayout>
 
             <TextView
-                android:id="@+id/movielength_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/rating_tv"
-                android:layout_gravity=""
-                tools:text="hello whats up" />
-        </RelativeLayout>
-    </GridLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/description"/>
-    <TextView
+                android:layout_marginEnd="@dimen/activity_horizontal_spacing"
+                android:layout_marginStart="@dimen/activity_horizontal_spacing"
+                android:text="@string/description" />
+
+            <TextView
+                android:id="@+id/description_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_spacing"
+                android:layout_marginStart="@dimen/activity_horizontal_spacing" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_spacing"
+                android:layout_marginStart="@dimen/activity_horizontal_spacing"
+                android:paddingTop="@dimen/eightdp"
+                android:text="@string/cast" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview_cast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/eightdp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_spacing"
+                android:layout_marginStart="@dimen/activity_horizontal_spacing"
+                android:paddingTop="@dimen/eightdp"
+                android:text="@string/related_movies" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/scrollView_recyclerview_related_movies"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_horizontal_spacing"
+
+                />
+        </LinearLayout>
+    </ScrollView>
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/detail_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/description_tv"/>
-    <include layout="@layout/scrollview_images"/>
-    <include layout="@layout/scrollview_images"/>
-</LinearLayout>
+        android:layout_height="?actionBarSize"
+        app:theme="@style/ToolbarColoredBackArrow"
+        android:background="@android:color/transparent"
+        android:minHeight="?attr/actionBarSize"
+       ></android.support.v7.widget.Toolbar>
+</FrameLayout>

@@ -7,43 +7,63 @@
     android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="128dp"
+        android:layout_height="112dp"
         android:gravity="bottom"
+        android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:minHeight="?actionBarSize"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:title="@string/app_name"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin" />
 
-
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:title="@string/app_name" />
 
     </android.support.design.widget.AppBarLayout>
+
+    <!-- <android.support.design.widget.AppBarLayout
+         android:id="@+id/appbar"
+         android:layout_width="match_parent"
+         android:layout_height="128dp"
+         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+         app:elevation="4dp">
+
+         <android.support.v7.widget.Toolbar
+             android:id="@+id/toolbar"
+             android:layout_width="match_parent"
+             android:layout_height="?actionBarSize"
+             android:layout_marginLeft="@dimen/activity_horizontal_margin"
+             android:layout_marginStart="@dimen/activity_horizontal_spacing"
+             android:background="?attr/colorPrimary"
+             android:elevation="4dp"
+             app:layout_scrollFlags="scroll|snap"
+             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+             app:title="@string/app_name" />
+
+
+     </android.support.design.widget.AppBarLayout>-->
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <android.support.v4.view.PagerTitleStrip
             android:id="@+id/pager_title_strip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:background="#33b5e5"
-            android:textColor="#fff"
+            android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:paddingBottom="4dp" />
-        </android.support.v4.view.ViewPager>
+            android:elevation="@dimen/appbar_elevation"
+            android:textColor="#fff" />
+    </android.support.v4.view.ViewPager>
 
 
 </android.support.design.widget.CoordinatorLayout>

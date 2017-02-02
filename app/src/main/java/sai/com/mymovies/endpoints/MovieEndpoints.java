@@ -4,6 +4,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import sai.com.mymovies.model.CastAndCrew;
 import sai.com.mymovies.model.Movie;
 import sai.com.mymovies.model.Reviews;
 import sai.com.mymovies.model.Videos;
@@ -24,8 +25,19 @@ public interface MovieEndpoints {
     Call<Reviews> getMovieReviews(
             @Path("movie_id") int movie_id,
             @Query("api_key") String api_key);
-    @GET ("movie/{movie_id}/videos")
+
+    @GET("movie/{movie_id}/videos")
     Call<Videos> getMovieVideos(
             @Path("movie_id") int movie_id,
             @Query("api_key") String api_key);
+
+    @GET("movie/{movie_id}/credits")
+    Call<CastAndCrew> getCastAndCrew(
+            @Path("movie_id") int movie_id,
+            @Query("api_key") String api_key);
+    @GET("movie/{movie_id}/similar")
+    Call<Movie> getSimilarMovies(
+            @Path("movie_id") int movie_id,
+            @Query("api_key") String api_key);
+
 }
