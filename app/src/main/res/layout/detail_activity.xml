@@ -1,83 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:padding="0dp">
 
-    <ScrollView
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:fitsSystemWindows="true">
 
-        <LinearLayout
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            app:contentScrim="?colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleMarginEnd="64dp"
+            android:fitsSystemWindows="true">
 
-            <fragment android:name="com.google.android.youtube.player.YouTubePlayerFragment"
-                android:id="@+id/youtubeplayer_fragment"
+            <ImageView
+                android:id="@+id/movieposter_iv"
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
+                android:layout_height="200dp"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="?actionBarSize"
+                android:scaleType="fitXY"
+                android:fitsSystemWindows="true"
+                app:layout_collapseMode="parallax"/>
 
-            <TextView
-                android:id="@+id/title_tv"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/detail_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="?actionBarSize"
+                />
+            <LinearLayout
+                android:id="@+id/title_layout"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
                 android:background="@color/titleTextBackground"
-                android:gravity="center_vertical"
-                android:paddingEnd="@dimen/activity_horizontal_spacing"
-                android:paddingLeft="@dimen/activity_horizontal_spacing"
-                android:paddingRight="@dimen/activity_horizontal_spacing"
-                android:paddingStart="@dimen/activity_horizontal_spacing"
-                android:textColor="@color/titleText"
-                tools:text="Gautamiputrasathakarni" />
+                android:orientation="horizontal"
+                app:layout_collapseMode="pin"
+                android:layout_gravity="bottom">
 
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/activity_horizontal_spacing"
-                android:layout_marginStart="@dimen/activity_horizontal_spacing"
-                android:layout_marginTop="8dp"
-                android:columnCount="1"
-                android:orientation="vertical"
-                android:rowCount="1">
-
-                <ImageView
-                    android:id="@+id/movieposter_iv"
-                    android:layout_width="150dp"
-                    android:layout_height="200dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
-                    android:src="@mipmap/ic_launcher" />
-
-                <RelativeLayout
+                <TextView
+                    android:id="@+id/title_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/eightdp"
-                    android:layout_marginStart="@dimen/eightdp">
+                    android:layout_gravity="center"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:paddingLeft="@dimen/activity_horizontal_spacing"
+                    android:paddingStart="@dimen/activity_horizontal_spacing"
+                    android:textColor="@color/titleText"
+                    android:textStyle="bold"
+                    android:maxWidth="250dp"
+                    tools:text="Gautamiputrasathakarni" />
 
-                    <TextView
-                        android:id="@+id/rating_tv"
+                    <RatingBar
+                        android:layout_marginStart="@dimen/activity_horizontal_spacing"
+                        android:theme="@style/RatingBar"
+                        style="?android:ratingBarStyleSmall"
+                        android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="hello whats up" />
+                        android:isIndicator="true"
+                        android:numStars="5"
+                        android:id="@+id/ratingBar"
+                        android:rating="3"
+                        android:stepSize="0.5"
+                        android:layout_marginLeft="@dimen/activity_horizontal_spacing" />
 
-                    <TextView
-                        android:id="@+id/movielength_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/rating_tv"
-                        android:layout_gravity=""
-                        tools:text="hello whats up" />
-                </RelativeLayout>
-            </GridLayout>
+            </LinearLayout>
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <fragment
+                android:id="@+id/youtubeplayer_fragment"
+                android:name="com.google.android.youtube.player.YouTubePlayerFragment"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="8dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/activity_horizontal_spacing"
                 android:layout_marginStart="@dimen/activity_horizontal_spacing"
+                android:textSize="16sp"
+                android:textAppearance="?android:textAppearanceLarge"
                 android:text="@string/description" />
 
             <TextView
@@ -85,7 +108,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/activity_horizontal_spacing"
-                android:layout_marginStart="@dimen/activity_horizontal_spacing" />
+                android:layout_marginStart="@dimen/activity_horizontal_spacing"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="@dimen/bodyTextSize"
+                />
 
             <TextView
                 android:layout_width="match_parent"
@@ -93,6 +119,8 @@
                 android:layout_marginEnd="@dimen/activity_horizontal_spacing"
                 android:layout_marginStart="@dimen/activity_horizontal_spacing"
                 android:paddingTop="@dimen/eightdp"
+                android:textSize="16sp"
+                android:textAppearance="?android:textAppearanceLarge"
                 android:text="@string/cast" />
 
             <android.support.v7.widget.RecyclerView
@@ -107,25 +135,16 @@
                 android:layout_marginEnd="@dimen/activity_horizontal_spacing"
                 android:layout_marginStart="@dimen/activity_horizontal_spacing"
                 android:paddingTop="@dimen/eightdp"
+                android:paddingBottom="@dimen/eightdp"
+                android:textSize="16sp"
+                android:textAppearance="?android:textAppearanceLarge"
                 android:text="@string/related_movies" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/scrollView_recyclerview_related_movies"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_horizontal_spacing"
-
-                />
+                android:layout_marginBottom="@dimen/activity_horizontal_spacing" />
         </LinearLayout>
-    </ScrollView>
-
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/detail_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        app:theme="@style/ToolbarColoredBackArrow"
-        android:background="@android:color/transparent"
-        android:minHeight="?attr/actionBarSize"
-       ></android.support.v7.widget.Toolbar>
-</FrameLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

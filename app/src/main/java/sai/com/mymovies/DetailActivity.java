@@ -1,20 +1,28 @@
 package sai.com.mymovies;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.yqritc.recyclerviewflexibledivider.VerticalDividerItemDecoration;
 
 import java.util.ArrayList;
@@ -38,26 +46,27 @@ import sai.com.mymovies.utiities.NetworkUtilities;
  */
 
 public class DetailActivity extends AppCompatActivity
-        implements YouTubePlayer.OnInitializedListener,SimilarMoviesAdapter.ListItemClickListener {
+        implements YouTubePlayer.OnInitializedListener, SimilarMoviesAdapter.ListItemClickListener {
     public static final String EXTRA_MOVIEOBJECT = "movie";
     private static final String LOG_TAG = DetailActivity.class.getSimpleName();
     @BindView(R.id.title_tv)
     TextView title_tv;
-    @BindView(R.id.rating_tv)
-    TextView rating_tv;
     @BindView(R.id.description_tv)
     TextView description_tv;
-    @BindView(R.id.movielength_tv)
-    TextView movielength_tv;
     @BindView(R.id.movieposter_iv)
     ImageView movieposter_iv;
     @BindView(R.id.scrollView_recyclerview_related_movies)
     RecyclerView recyclerview_related_movies;
     @BindView(R.id.recyclerview_cast)
     RecyclerView recyclervie_cast;
-
-     @BindView(R.id.detail_toolbar)
+    @BindView(R.id.ratingBar)
+    RatingBar rating;
+    private Target mTarget;
+    @BindView(R.id.detail_toolbar)
     Toolbar toolbar;
+    @BindView(R.id.title_layout)
+    LinearLayout title_layout;
+    private Bitmap movieBackgraoundBitmap;
     private YouTubePlayerFragment mfrag;
     private Movie.results mMovieObject;
     private List<CastAndCrew.cast> mCastList;
@@ -74,9 +83,11 @@ public class DetailActivity extends AppCompatActivity
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         mfrag = (YouTubePlayerFragment) getFragmentManager().findFragmentById(R.id.youtubeplayer_fragment);
         if (getIntent() != null) {
             mMovieObject = getIntent().getParcelableExtra(EXTRA_MOVIEOBJECT);
+            getSupportActionBar().setTitle(mMovieObject.getOriginal_title());
             getmovieVideos();
             RecyclerView.LayoutManager castLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             recyclervie_cast.setLayoutManager(castLayoutManager);
@@ -95,6 +106,7 @@ public class DetailActivity extends AppCompatActivity
             getCastData();
             getSimilarMovies();
             UpdateUi();
+            rating.setRating((float) (mMovieObject.getVote_average() / 2));
         }
     }
 
@@ -139,12 +151,46 @@ public class DetailActivity extends AppCompatActivity
 
     private void UpdateUi() {
         title_tv.setText(mMovieObject.getOriginal_title());
-        rating_tv.setText(String.valueOf(mMovieObject.getVote_average()));
         description_tv.setText(mMovieObject.getOverview());
-        Picasso.with(this)
-                .load(MainActivity.IMAGE_BASE_URL + "w185/" + mMovieObject.getPoster_path())
-                .into(movieposter_iv);
+        downloadImageBitmap();
 
+
+    }
+
+    private void downloadImageBitmap() {
+        mTarget = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                movieBackgraoundBitmap = bitmap;
+                movieposter_iv.setImageBitmap(movieBackgraoundBitmap);
+                Palette.from(movieBackgraoundBitmap).generate(new Palette.PaletteAsyncListener() {
+                    public void onGenerated(Palette palette) {
+                        Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
+                        if (vibrantSwatch != null) {
+                            title_layout.setBackgroundColor(vibrantSwatch.getRgb());
+                            title_tv.setTextColor(vibrantSwatch.getTitleTextColor());
+                            toolbar.setTitleTextColor(vibrantSwatch.getBodyTextColor());
+                            final Drawable upArrow = ContextCompat.getDrawable(DetailActivity.this,
+                                    android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material);
+                            upArrow.setColorFilter(vibrantSwatch.getBodyTextColor(), PorterDuff.Mode.SRC_ATOP);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        };
+        Picasso.with(this)
+                .load(MainActivity.IMAGE_BASE_URL + "w500/" + mMovieObject.getBackdrop_path())
+                .into(mTarget);
     }
 
     @Override
@@ -175,7 +221,7 @@ public class DetailActivity extends AppCompatActivity
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
 
-        if((!wasRestored))
+        if ((!wasRestored) && mVideoList.size() > 0)
             youTubePlayer.cueVideo(mVideoList.get(0).getKey());
     }
 
@@ -205,8 +251,8 @@ public class DetailActivity extends AppCompatActivity
 
     @Override
     public void onListItemClicked(Movie.results movieObject) {
-        Intent DetailactivitIntent=new Intent(this, DetailActivity.class);
-        DetailactivitIntent.putExtra(EXTRA_MOVIEOBJECT,movieObject);
+        Intent DetailactivitIntent = new Intent(this, DetailActivity.class);
+        DetailactivitIntent.putExtra(EXTRA_MOVIEOBJECT, movieObject);
         DetailactivitIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(DetailactivitIntent);
     }

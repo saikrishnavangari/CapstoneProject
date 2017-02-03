@@ -24,6 +24,7 @@ public class NetworkUtilities {
 
    public static final String BASE_URL = "http://api.themoviedb.org/3/";
    private static Retrofit retrofit = null;
+   private static final int END_TIME=60*60*8;
 
       public static MovieEndpoints getClient() {
          if (retrofit==null) {
@@ -50,7 +51,7 @@ public class NetworkUtilities {
               // don't persist past a device reboot
               .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
               // start between 0 and 60 seconds from now
-              .setTrigger(Trigger.executionWindow(0,60))
+              .setTrigger(Trigger.executionWindow(0,END_TIME))
               // don't overwrite an existing job with the same tag
               .setReplaceCurrent(false)
               // retry with exponential backoff
