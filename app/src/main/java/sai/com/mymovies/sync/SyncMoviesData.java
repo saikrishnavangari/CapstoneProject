@@ -22,8 +22,8 @@ import sai.com.mymovies.utiities.NetworkUtilities;
  */
 
 public class SyncMoviesData {
-    private static final String LOG_TAG = SyncMoviesData.class.getSimpleName();
     public static final String ACTION_DATA_UPDATED = "sai.com.mymovies.ACTION_DATA_UPDATED";
+    private static final String LOG_TAG = SyncMoviesData.class.getSimpleName();
     private Context mContext;
     private String mMovie_type;
     private Call<Movie> mCall;
@@ -39,12 +39,8 @@ public class SyncMoviesData {
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 Movie moviesResponse = response.body();
                 saveData(moviesResponse.getResults());
-              /*  List<Movie.results>moviesList=moviesResponse.getResults();
-                for (Movie.results movie :moviesList) {
-                    Log.d(LOG_TAG, movie.toString());
-                }*/
-                if((!mContext.getClass().getSimpleName().equals(MainActivity.class.getSimpleName())))
-                ((MoviesDataJobService) mContext).jobCompleted();
+                if ((!mContext.getClass().getSimpleName().equals(MainActivity.class.getSimpleName())))
+                    ((MoviesDataJobService) mContext).jobCompleted();
             }
 
             @Override
@@ -53,14 +49,16 @@ public class SyncMoviesData {
             }
         });
 
-}
-    public void onServiceCancelled(){
+    }
+
+    public void onServiceCancelled() {
         mCall.cancel();
     }
+
     void saveData(List<Movie.results> movies) {
-        String selection= MovieFields.Column_movieType+"=?";
-        String[] selectionArgs=new String[]{mMovie_type};
-        mContext.getContentResolver().delete(MoviesProvider.Movies.CONTENT_URI,selection,selectionArgs);
+        String selection = MovieFields.Column_movieType + "=?";
+        String[] selectionArgs = new String[]{mMovie_type};
+        mContext.getContentResolver().delete(MoviesProvider.Movies.CONTENT_URI, selection, selectionArgs);
         ContentValues values = new ContentValues();
         for (Movie.results movie : movies) {
 
@@ -75,9 +73,9 @@ public class SyncMoviesData {
             values.put(MovieFields.Column_backdropPath, movie.getBackdrop_path());
             values.put(MovieFields.Column_releaseDate, movie.getRelease_date());
             values.put(MovieFields.Column_movieType, mMovie_type);
-            mContext.getContentResolver().insert(MoviesProvider.Movies.CONTENT_URI,values);
+            mContext.getContentResolver().insert(MoviesProvider.Movies.CONTENT_URI, values);
         }
-        if(mMovie_type.equals("upcoming")){
+        if (mMovie_type.equals("upcoming")) {
             Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED);
             mContext.sendBroadcast(dataUpdatedIntent);
         }

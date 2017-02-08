@@ -9,15 +9,14 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-    <style name="MainActivityTheme" parent="AppTheme">
-    </style>
+
+    <style name="MainActivityTheme" parent="AppTheme"></style>
 
     <style name="ToolbarColoredBackArrow" parent="AppTheme">
         <item name="android:textColorSecondary">@color/white</item>
     </style>
 
-    <style name="RatingBar"
-        parent="Theme.AppCompat">
+    <style name="RatingBar" parent="Theme.AppCompat">
         <item name="colorControlNormal">@color/yellow</item>
         <item name="colorControlActivated">@color/yellow</item>
     </style>

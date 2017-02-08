@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class CastAndCrew {
     ArrayList<cast> cast;
     ArrayList<crew> crew;
+
     public ArrayList<CastAndCrew.crew> getCrew() {
         return crew;
     }
@@ -16,7 +17,6 @@ public class CastAndCrew {
     public void setCrew(ArrayList<CastAndCrew.crew> crew) {
         this.crew = crew;
     }
-
 
 
     public ArrayList<cast> getCast() {

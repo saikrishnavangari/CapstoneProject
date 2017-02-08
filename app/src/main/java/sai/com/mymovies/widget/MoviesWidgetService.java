@@ -25,14 +25,8 @@ import sai.com.mymovies.model.Movie;
 
 public class MoviesWidgetService extends RemoteViewsService {
     public static final String EXTRA_MOVIEOBJECT = "movie";
-    private static final String[] Movie_COLUMNS = {
-            MovieFields.Column_movieId,
-            MovieFields.Column_posterPath,
-            MovieFields.Column_movieType
-    };
+
     private static final int INDEX_MOVIE_ID = 0;
-    private static final int INDEX_MOVIE_POSTERPATH = 3;
-    private static final int INDEX_MOVIE_MOVIETYPE = 10;
     private int mappWidgetId;
 
 
@@ -45,9 +39,8 @@ public class MoviesWidgetService extends RemoteViewsService {
 
 
     class MoviesRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
-        private Cursor data = null;
         public static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
-
+        private Cursor data = null;
 
         @Override
         public void onCreate() {
@@ -108,9 +101,9 @@ public class MoviesWidgetService extends RemoteViewsService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Movie.results movieObject=get(position);
+            Movie.results movieObject = get(position);
             final Intent fillInIntent = new Intent();
-            fillInIntent.putExtra(EXTRA_MOVIEOBJECT,movieObject);
+            fillInIntent.putExtra(EXTRA_MOVIEOBJECT, movieObject);
             views.setOnClickFillInIntent(R.id.imageView_widget, fillInIntent);
             return views;
         }

@@ -21,6 +21,17 @@ public class Movie {
     }
 
     public static class results implements Parcelable {
+        public static final Creator<results> CREATOR = new Creator<results>() {
+            @Override
+            public results createFromParcel(Parcel in) {
+                return new results(in);
+            }
+
+            @Override
+            public results[] newArray(int size) {
+                return new results[size];
+            }
+        };
         private String poster_path;
         private String overview;
         private String release_date;
@@ -47,17 +58,12 @@ public class Movie {
             vote_average = in.readDouble();
         }
 
-        public static final Creator<results> CREATOR = new Creator<results>() {
-            @Override
-            public results createFromParcel(Parcel in) {
-                return new results(in);
-            }
+        public results() {
+        }
 
-            @Override
-            public results[] newArray(int size) {
-                return new results[size];
-            }
-        };
+        public static Creator<Movie.results> getCREATOR() {
+            return CREATOR;
+        }
 
         @Override
         public int describeContents() {
@@ -165,13 +171,6 @@ public class Movie {
 
         public void setVote_average(double vote_average) {
             this.vote_average = vote_average;
-        }
-
-        public static Creator<Movie.results> getCREATOR() {
-            return CREATOR;
-        }
-
-        public results() {
         }
 
         @Override

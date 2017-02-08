@@ -33,14 +33,23 @@ import sai.com.mymovies.sync.SyncMoviesData;
 public class HomepageFragment extends android.support.v4.app.Fragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = HomepageFragment.class.getSimpleName();
-    @BindView(R.id.gridview)
-    GridView gridview;
-    @BindView(R.id.adView) AdView adView;
     private final static String BundleMovieKey = "movietype";
     private final static int LOADER_ID = 1001;
+    @BindView(R.id.gridview)
+    GridView gridview;
+    @BindView(R.id.adView)
+    AdView adView;
     private GridviewAdapter mGridviewAdapter;
     private String mMovietype;
 
+    public static android.support.v4.app.Fragment newInstance(int index, String movie_type) {
+        HomepageFragment homepageFragment = new HomepageFragment();
+        Bundle args = new Bundle();
+        args.putInt("someInt", index);
+        args.putString(BundleMovieKey, movie_type);
+        homepageFragment.setArguments(args);
+        return homepageFragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,52 +98,53 @@ public class HomepageFragment extends android.support.v4.app.Fragment implements
 
                 return true;
             }
+
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d("onQueryTextSubmit", query);
-                Intent searchResultIntent=new Intent(getActivity(), SearchActivity.class);
-                searchResultIntent.putExtra(SearchActivity.EXTRA_QUERY,query);
+                Intent searchResultIntent = new Intent(getActivity(), SearchActivity.class);
+                searchResultIntent.putExtra(SearchActivity.EXTRA_QUERY, query);
                 startActivity(searchResultIntent);
                 return true;
             }
         };
         searchView.setOnQueryTextListener(queryTextListener);
-            super.onCreateOptionsMenu(menu, inflater);
+        super.onCreateOptionsMenu(menu, inflater);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
+        View view = inflater.inflate(R.layout.movies_gridview, container, false);
+        ButterKnife.bind(this, view);
+        if (contentExist().getCount() == 0) {
+            SyncMoviesData syncMoviesData = new SyncMoviesData();
+            syncMoviesData.getMoviesData(mMovietype, getActivity());
         }
 
-        @Override
-        public boolean onOptionsItemSelected (MenuItem item){
-            return super.onOptionsItemSelected(item);
-        }
-
-        @Nullable
-        @Override
-        public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle
-        savedInstanceState){
-            View view = inflater.inflate(R.layout.movies_gridview, container, false);
-            ButterKnife.bind(this, view);
-            if (contentExist().getCount() == 0) {
-                SyncMoviesData syncMoviesData = new SyncMoviesData();
-                syncMoviesData.getMoviesData(mMovietype, getActivity());
-            }
-
-            AdRequest adRequest = new AdRequest.Builder()
-                    .setRequestAgent("android_studio:ad_template").build();
-            adView.loadAd(adRequest);
+        AdRequest adRequest = new AdRequest.Builder()
+                .setRequestAgent("android_studio:ad_template").build();
+        adView.loadAd(adRequest);
        /* mGridviewAdapter = new GridviewAdapter(getActivity());
         gridview.setAdapter(mGridviewAdapter);*/
-            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent DetailActivityIntent = new Intent(getActivity(), DetailActivity.class);
-                    DetailActivityIntent.putExtra(DetailActivity.EXTRA_MOVIEOBJECT, mGridviewAdapter.get(position));
-                    startActivity(DetailActivityIntent);
-                }
-            });
-            setHasOptionsMenu(true);
-            return view;
-        }
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent DetailActivityIntent = new Intent(getActivity(), DetailActivity.class);
+                DetailActivityIntent.putExtra(DetailActivity.EXTRA_MOVIEOBJECT, mGridviewAdapter.get(position));
+                startActivity(DetailActivityIntent);
+            }
+        });
+        setHasOptionsMenu(true);
+        return view;
+    }
 
     private Cursor contentExist() {
         String selection = MovieFields.Column_movieType + "=?";
@@ -150,15 +160,6 @@ public class HomepageFragment extends android.support.v4.app.Fragment implements
         // Prepare the loader.  Either re-connect with an existing one,
         // or start a new one.
         getLoaderManager().initLoader(LOADER_ID, null, this);
-    }
-
-    public static android.support.v4.app.Fragment newInstance(int index, String movie_type) {
-        HomepageFragment homepageFragment = new HomepageFragment();
-        Bundle args = new Bundle();
-        args.putInt("someInt", index);
-        args.putString(BundleMovieKey, movie_type);
-        homepageFragment.setArguments(args);
-        return homepageFragment;
     }
 
     @Override

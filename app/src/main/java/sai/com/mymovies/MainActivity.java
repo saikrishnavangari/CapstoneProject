@@ -15,14 +15,15 @@ import butterknife.ButterKnife;
 import sai.com.mymovies.utiities.NetworkUtilities;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String LOG_TAG=MainActivity.class.getSimpleName();
-    public static final String API_KEY="8496be0b2149805afa458ab8ec27560c";
-    public static final String YOUTUBE_API_KEY="AIzaSyDfV1jmS4HbVjpYdNBCh_0AJ66RTmhl8G8";
+    public static final String API_KEY = "8496be0b2149805afa458ab8ec27560c";
+    public static final String YOUTUBE_API_KEY = "AIzaSyDfV1jmS4HbVjpYdNBCh_0AJ66RTmhl8G8";
     public static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
     @BindView(R.id.viewpager)
     ViewPager viewPager;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,22 +33,22 @@ public class MainActivity extends AppCompatActivity {
         NetworkUtilities.ScheduleMoviesJobService(this, "upcoming");
         NetworkUtilities.ScheduleMoviesJobService(this, "top_rated");
         NetworkUtilities.ScheduleMoviesJobService(this, "now_playing");
-        MyPagerAdapter myPagerAdapter=new MyPagerAdapter(getSupportFragmentManager());
+        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         setSupportActionBar(toolbar);
         viewPager.setAdapter(myPagerAdapter);
-        
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater=getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
 
         return super.onCreateOptionsMenu(menu);
     }
 
 
-    public  class MyPagerAdapter extends FragmentStatePagerAdapter {
-        private  int NUM_ITEMS = 4;
+    public class MyPagerAdapter extends FragmentStatePagerAdapter {
+        private int NUM_ITEMS = 4;
 
         public MyPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
             switch (position) {
                 case 0: // Fragment # 0 - This will show FirstFragment
-                    return  "Popular";
+                    return "Popular";
                 case 1: // Fragment # 1 - This will show FirstFragment
                     return "TopRated";
                 case 2: // Fragment # 2 - This will show FirstFragment

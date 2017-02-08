@@ -23,10 +23,11 @@ public class SearchMoviesAdapter extends ArrayAdapter {
     private ArrayList<Movie.results> searchContent;
     private Context mContext;
     private ImageView imageView;
+
     public SearchMoviesAdapter(Context context, ArrayList<Movie.results> objects) {
-        super(context,0,objects);
-        searchContent=objects;
-        mContext=context;
+        super(context, 0, objects);
+        searchContent = objects;
+        mContext = context;
     }
 
 
@@ -51,7 +52,7 @@ public class SearchMoviesAdapter extends ArrayAdapter {
             convertView = LayoutInflater.from(mContext).
                     inflate(R.layout.gridview_listitem, parent, false);
         }
-        imageView= (ImageView) convertView.findViewById(R.id.imageView);
+        imageView = (ImageView) convertView.findViewById(R.id.imageView);
 
         Picasso.with(mContext)
                 .load(MainActivity.IMAGE_BASE_URL + "w185/" + getItem(position).getPoster_path())

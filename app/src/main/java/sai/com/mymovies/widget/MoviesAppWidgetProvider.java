@@ -21,11 +21,12 @@ import sai.com.mymovies.sync.SyncMoviesData;
  * Created by krrish on 4/02/2017.
  */
 
-public class MoviesAppWidgetProvider extends AppWidgetProvider{
+public class MoviesAppWidgetProvider extends AppWidgetProvider {
     public static int[] mAppWidgetIds;
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-            mAppWidgetIds=appWidgetIds;
+        mAppWidgetIds = appWidgetIds;
         for (int appWidgetId : appWidgetIds) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.movies_appwidget);
 
@@ -41,7 +42,7 @@ public class MoviesAppWidgetProvider extends AppWidgetProvider{
                 setRemoteAdapterV11(context, views);
             }
 
-            Intent clickIntentTemplate = new Intent(context,DetailActivity.class);
+            Intent clickIntentTemplate = new Intent(context, DetailActivity.class);
             PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
                     .addNextIntentWithParentStack(clickIntentTemplate)
                     .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -60,7 +61,7 @@ public class MoviesAppWidgetProvider extends AppWidgetProvider{
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private void setRemoteAdapter(Context context, @NonNull final RemoteViews views) {
-        Intent serviceIntent=new Intent(context, MoviesWidgetService.class);
+        Intent serviceIntent = new Intent(context, MoviesWidgetService.class);
         views.setRemoteAdapter(R.id.gridview_widget,
                 new Intent(context, MoviesWidgetService.class));
     }
@@ -75,6 +76,7 @@ public class MoviesAppWidgetProvider extends AppWidgetProvider{
         views.setRemoteAdapter(0, R.id.gridview_widget,
                 new Intent(context, MoviesWidgetService.class));
     }
+
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         super.onReceive(context, intent);

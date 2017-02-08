@@ -15,7 +15,6 @@ import static net.simonvt.schematic.annotation.DataType.Type.TEXT;
 public interface MovieFields {
 
 
-
     //Fields for the table Movies are declared here
     @DataType(INTEGER)
     @PrimaryKey

@@ -13,7 +13,7 @@ public class Reviews {
         return results;
     }
 
-    public static class results{
+    public static class results {
         private String content;
 
         public String getContent() {

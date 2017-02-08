@@ -25,9 +25,10 @@ import sai.com.mymovies.model.CastAndCrew;
 public class HorizontalCastAdapter extends RecyclerView.Adapter<HorizontalCastAdapter.ViewHolder> {
     List<CastAndCrew.cast> mDataList;
     Context mContext;
+
     public HorizontalCastAdapter(List<CastAndCrew.cast> mCast, Context context) {
         this.mDataList = mCast;
-        mContext=context;
+        mContext = context;
     }
 
     @Override
@@ -38,7 +39,7 @@ public class HorizontalCastAdapter extends RecyclerView.Adapter<HorizontalCastAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        CastAndCrew.cast castObject= mDataList.get(position);
+        CastAndCrew.cast castObject = mDataList.get(position);
         holder.name.setText(castObject.getName());
         Picasso.with(mContext)
                 .load(MainActivity.IMAGE_BASE_URL + "w185/" + castObject.getProfile_path())

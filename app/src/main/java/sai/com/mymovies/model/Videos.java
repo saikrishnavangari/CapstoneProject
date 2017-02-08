@@ -10,6 +10,7 @@ public class Videos {
 
 
     public ArrayList<Videos.results> results;
+
     public ArrayList<Videos.results> getResults() {
         return results;
     }

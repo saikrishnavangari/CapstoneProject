@@ -35,10 +35,12 @@ public interface MovieEndpoints {
     Call<CastAndCrew> getCastAndCrew(
             @Path("movie_id") int movie_id,
             @Query("api_key") String api_key);
+
     @GET("movie/{movie_id}/similar")
     Call<Movie> getSimilarMovies(
             @Path("movie_id") int movie_id,
             @Query("api_key") String api_key);
+
     @GET("search/movie")
     Call<Movie> getSearchMovies(
             @Query("api_key") String api_key,

@@ -24,18 +24,15 @@ import sai.com.mymovies.model.Movie;
  */
 
 public class SimilarMoviesAdapter extends RecyclerView.Adapter<SimilarMoviesAdapter.ViewHolder> {
-    private final String LOG_TAG=SimilarMoviesAdapter.class.getSimpleName();
+    private final String LOG_TAG = SimilarMoviesAdapter.class.getSimpleName();
     List<Movie.results> mDataList;
     Context mContext;
     ListItemClickListener mOnClickListener;
+
     public SimilarMoviesAdapter(List<Movie.results> similarmovies, Context context) {
         this.mDataList = similarmovies;
-        mContext=context;
-        mOnClickListener= (ListItemClickListener) context;
-    }
-    public interface ListItemClickListener{
-
-        public void onListItemClicked(Movie.results movieObject);
+        mContext = context;
+        mOnClickListener = (ListItemClickListener) context;
     }
 
     @Override
@@ -46,7 +43,7 @@ public class SimilarMoviesAdapter extends RecyclerView.Adapter<SimilarMoviesAdap
 
     @Override
     public void onBindViewHolder(SimilarMoviesAdapter.ViewHolder holder, int position) {
-        Movie.results movieObject= mDataList.get(position);
+        Movie.results movieObject = mDataList.get(position);
         holder.name.setText(movieObject.getOriginal_title());
         Picasso.with(mContext)
                 .load(MainActivity.IMAGE_BASE_URL + "w185/" + movieObject.getPoster_path())
@@ -65,22 +62,28 @@ public class SimilarMoviesAdapter extends RecyclerView.Adapter<SimilarMoviesAdap
         return super.getItemId(position);
     }
 
+    public interface ListItemClickListener {
+
+        public void onListItemClicked(Movie.results movieObject);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.name_tv)
         TextView name;
         @BindView(R.id.image_scrollview)
         ImageView image_scrollview;
+
         public ViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            Log.d(LOG_TAG,"item clicked");
-               int position= getAdapterPosition();
-            Movie.results movieObject=mDataList.get(position);
+            Log.d(LOG_TAG, "item clicked");
+            int position = getAdapterPosition();
+            Movie.results movieObject = mDataList.get(position);
             mOnClickListener.onListItemClicked(movieObject);
         }
     }

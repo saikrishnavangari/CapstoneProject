@@ -28,16 +28,16 @@ import sai.com.mymovies.utiities.NetworkUtilities;
  */
 
 public class SearchActivity extends AppCompatActivity {
-    private static String LOG_TAG = SearchActivity.class.getSimpleName();
     public static String EXTRA_QUERY = "query";
-    private ArrayList<Movie.results> mSearchMoviesList;
-    private SearchMoviesAdapter mSearchAdapter;
+    private static String LOG_TAG = SearchActivity.class.getSimpleName();
     @BindView(R.id.gridview)
     GridView gridview;
     @BindView(R.id.empty_view)
     TextView emptyView;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    private ArrayList<Movie.results> mSearchMoviesList;
+    private SearchMoviesAdapter mSearchAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public class SearchActivity extends AppCompatActivity {
 
 
     public void searchMovies() {
-        String query=getIntent().getStringExtra(EXTRA_QUERY);
+        String query = getIntent().getStringExtra(EXTRA_QUERY);
         MovieEndpoints movieEndpointsService = NetworkUtilities.getClient();
         Call<Movie> call = movieEndpointsService.getSearchMovies(MainActivity.API_KEY, query);
         call.enqueue(new Callback<Movie>() {
@@ -69,12 +69,11 @@ public class SearchActivity extends AppCompatActivity {
                 Movie movieResponse = response.body();
                 Log.d("url", call.request().url().toString());
                 mSearchMoviesList = movieResponse.getResults();
-                if(mSearchMoviesList.size()>0) {
+                if (mSearchMoviesList.size() > 0) {
                     Log.d("hello", mSearchMoviesList.get(0).toString());
                     mSearchAdapter = new SearchMoviesAdapter(SearchActivity.this, mSearchMoviesList);
                     gridview.setAdapter(mSearchAdapter);
-                }
-                else
+                } else
                     emptyView.setVisibility(View.VISIBLE);
 
             }

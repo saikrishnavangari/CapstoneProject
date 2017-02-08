@@ -127,14 +127,12 @@ public class DetailActivity extends AppCompatActivity
             recyclervie_cast.addItemDecoration(new VerticalDividerItemDecoration
                     .Builder(this).color(Color.BLACK)
                     .sizeResId(R.dimen.divider)
-                    //.marginResId(R.dimen.leftmargin, R.dimen.rightmargin)
                     .build());
             RecyclerView.LayoutManager moviesLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             recyclerview_related_movies.setLayoutManager(moviesLayoutManager);
             recyclerview_related_movies.addItemDecoration(new VerticalDividerItemDecoration
                     .Builder(this).color(Color.BLACK)
                     .sizeResId(R.dimen.divider)
-                    //.marginResId(R.dimen.leftmargin, R.dimen.rightmargin)
                     .build());
             getCastData();
             getSimilarMovies();
@@ -143,15 +141,7 @@ public class DetailActivity extends AppCompatActivity
         }
     }
 
-    // A method to find height of the status bar
-    public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
+
 
     private void getCastData() {
         MovieEndpoints movieEndpointsService = NetworkUtilities.getClient();
@@ -200,8 +190,7 @@ public class DetailActivity extends AppCompatActivity
                             mColor = vibrantSwatch.getRgb();
                             title_layout.setBackgroundColor(mColor);
                             title_tv.setTextColor(vibrantSwatch.getTitleTextColor());
-                        }
-                        else{
+                        } else {
                             title_layout.setBackgroundColor(mColor);
                             title_tv.setTextColor(ContextCompat.getColor(DetailActivity.this, R.color.white));
 
