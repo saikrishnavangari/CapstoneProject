@@ -17,7 +17,7 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="?colorPrimary"
+            android:background="@color/white"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:expandedTitleMarginStart="48dp"
             app:expandedTitleMarginEnd="64dp">
@@ -42,7 +42,6 @@
                 android:id="@+id/title_layout"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
-                android:background="@color/titleTextBackground"
                 android:orientation="horizontal"
                 app:layout_collapseMode="pin"
                 android:layout_gravity="bottom">

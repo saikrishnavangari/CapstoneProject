@@ -3,7 +3,6 @@ package sai.com.mymovies;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -103,6 +103,8 @@ public class DetailActivity extends AppCompatActivity
                 int totalScroll = appBarLayout.getTotalScrollRange();
                 int currentScroll = totalScroll + verticalOffset;
                 Window window = getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     if ((currentScroll) < 255)
                         window.setStatusBarColor(mColor);
@@ -194,19 +196,14 @@ public class DetailActivity extends AppCompatActivity
                         Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
                         Palette.Swatch vibrantDarkSwatch = palette.getDarkVibrantSwatch();
                         if (vibrantSwatch != null) {
+                            Log.d(LOG_TAG, String.valueOf(vibrantSwatch.getRgb()));
                             mColor = vibrantSwatch.getRgb();
                             title_layout.setBackgroundColor(mColor);
                             title_tv.setTextColor(vibrantSwatch.getTitleTextColor());
-                            toolbar.setTitleTextColor(vibrantSwatch.getBodyTextColor());
-                            final Drawable upArrow = ContextCompat.getDrawable(DetailActivity.this,
-                                    android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material);
-                            upArrow.setColorFilter(vibrantSwatch.getBodyTextColor(), PorterDuff.Mode.SRC_ATOP);
-                            if (android.os.Build.VERSION.SDK_INT >= 21) {
-                                Window window = getWindow();
-                                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                                window.setStatusBarColor(ContextCompat.getColor(DetailActivity.this, android.R.color.transparent));
-                            }
+                        }
+                        else{
+                            title_layout.setBackgroundColor(mColor);
+                            title_tv.setTextColor(ContextCompat.getColor(DetailActivity.this, R.color.white));
                         }
                     }
                 });
