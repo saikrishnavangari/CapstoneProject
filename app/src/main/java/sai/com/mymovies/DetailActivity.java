@@ -204,6 +204,7 @@ public class DetailActivity extends AppCompatActivity
                         else{
                             title_layout.setBackgroundColor(mColor);
                             title_tv.setTextColor(ContextCompat.getColor(DetailActivity.this, R.color.white));
+
                         }
                     }
                 });

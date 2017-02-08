@@ -16,7 +16,7 @@ import sai.com.mymovies.utiities.NetworkUtilities;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG=MainActivity.class.getSimpleName();
-    public static final String API_KEY="8496be0b2149805afa458ab8ec27560c";
+    public static final String API_KEY="";
     public static final String YOUTUBE_API_KEY="AIzaSyDfV1jmS4HbVjpYdNBCh_0AJ66RTmhl8G8";
     public static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
     @BindView(R.id.viewpager)
