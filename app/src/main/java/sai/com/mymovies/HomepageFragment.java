@@ -17,6 +17,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.com.mymovies.adapters.GridviewAdapter;
@@ -32,6 +35,7 @@ public class HomepageFragment extends android.support.v4.app.Fragment implements
     private static final String LOG_TAG = HomepageFragment.class.getSimpleName();
     @BindView(R.id.gridview)
     GridView gridview;
+    @BindView(R.id.adView) AdView adView;
     private final static String BundleMovieKey = "movietype";
     private final static int LOADER_ID = 1001;
     private GridviewAdapter mGridviewAdapter;
@@ -114,6 +118,10 @@ public class HomepageFragment extends android.support.v4.app.Fragment implements
                 SyncMoviesData syncMoviesData = new SyncMoviesData();
                 syncMoviesData.getMoviesData(mMovietype, getActivity());
             }
+
+            AdRequest adRequest = new AdRequest.Builder()
+                    .setRequestAgent("android_studio:ad_template").build();
+            adView.loadAd(adRequest);
        /* mGridviewAdapter = new GridviewAdapter(getActivity());
         gridview.setAdapter(mGridviewAdapter);*/
             gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {

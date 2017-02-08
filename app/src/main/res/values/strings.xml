@@ -11,4 +11,5 @@
     <string name="search_hint">enter movie name</string>
     <string name="empty_searchList">Sorry there is no match in the databse , Please try with a different movie name</string>
     <string name="searchactivity_titile">Search Results</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 </resources>
