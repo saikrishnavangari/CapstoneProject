@@ -1,11 +1,17 @@
 package sai.com.mymovies;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -27,9 +33,10 @@ public class HomepageFragment extends android.support.v4.app.Fragment implements
     @BindView(R.id.gridview)
     GridView gridview;
     private final static String BundleMovieKey = "movietype";
-    private final static int LOADER_ID=1001;
+    private final static int LOADER_ID = 1001;
     private GridviewAdapter mGridviewAdapter;
     private String mMovietype;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,33 +62,77 @@ public class HomepageFragment extends android.support.v4.app.Fragment implements
         }
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.movies_gridview, container, false);
-        ButterKnife.bind(this, view);
-        if(contentExist().getCount()==0) {
-            SyncMoviesData syncMoviesData = new SyncMoviesData();
-            syncMoviesData.getMoviesData(mMovietype, getActivity());
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        SearchView searchView = null;
+        SearchView.OnQueryTextListener queryTextListener;
+        inflater.inflate(R.menu.menu_main, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
         }
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager
+                    .getSearchableInfo(getActivity().getComponentName()));
+        }
+        queryTextListener = new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.d("onQueryTextChange", newText);
+
+                return true;
+            }
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("onQueryTextSubmit", query);
+                Intent searchResultIntent=new Intent(getActivity(), SearchActivity.class);
+                searchResultIntent.putExtra(SearchActivity.EXTRA_QUERY,query);
+                startActivity(searchResultIntent);
+                return true;
+            }
+        };
+        searchView.setOnQueryTextListener(queryTextListener);
+            super.onCreateOptionsMenu(menu, inflater);
+
+        }
+
+        @Override
+        public boolean onOptionsItemSelected (MenuItem item){
+            return super.onOptionsItemSelected(item);
+        }
+
+        @Nullable
+        @Override
+        public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle
+        savedInstanceState){
+            View view = inflater.inflate(R.layout.movies_gridview, container, false);
+            ButterKnife.bind(this, view);
+            if (contentExist().getCount() == 0) {
+                SyncMoviesData syncMoviesData = new SyncMoviesData();
+                syncMoviesData.getMoviesData(mMovietype, getActivity());
+            }
        /* mGridviewAdapter = new GridviewAdapter(getActivity());
         gridview.setAdapter(mGridviewAdapter);*/
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent DetailActivityIntent = new Intent(getActivity(), DetailActivity.class);
-                DetailActivityIntent.putExtra(DetailActivity.EXTRA_MOVIEOBJECT, mGridviewAdapter.get(position));
-                startActivity(DetailActivityIntent);
-            }
-        });
-        return view;
-    }
+            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent DetailActivityIntent = new Intent(getActivity(), DetailActivity.class);
+                    DetailActivityIntent.putExtra(DetailActivity.EXTRA_MOVIEOBJECT, mGridviewAdapter.get(position));
+                    startActivity(DetailActivityIntent);
+                }
+            });
+            setHasOptionsMenu(true);
+            return view;
+        }
 
     private Cursor contentExist() {
-        String selection= MovieFields.Column_movieType+"=?";
-        Log.d(LOG_TAG +"movietype in cursor",mMovietype);
-        String[] selectionArgs=new String[]{mMovietype};
-       return getActivity().getContentResolver().query( MoviesProvider.Movies.CONTENT_URI, null,
+        String selection = MovieFields.Column_movieType + "=?";
+        Log.d(LOG_TAG + "movietype in cursor", mMovietype);
+        String[] selectionArgs = new String[]{mMovietype};
+        return getActivity().getContentResolver().query(MoviesProvider.Movies.CONTENT_URI, null,
                 selection, selectionArgs, null);
     }
 
@@ -90,7 +141,7 @@ public class HomepageFragment extends android.support.v4.app.Fragment implements
         super.onActivityCreated(savedInstanceState);
         // Prepare the loader.  Either re-connect with an existing one,
         // or start a new one.
-        getLoaderManager().initLoader(LOADER_ID,null,this);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     public static android.support.v4.app.Fragment newInstance(int index, String movie_type) {
@@ -110,17 +161,17 @@ public class HomepageFragment extends android.support.v4.app.Fragment implements
 
     @Override
     public android.support.v4.content.Loader onCreateLoader(int id, Bundle args) {
-        String selection= MovieFields.Column_movieType+"=?";
-        Log.d(LOG_TAG +"movietype in cursor",mMovietype);
-        String[] selectionArgs=new String[]{mMovietype};
+        String selection = MovieFields.Column_movieType + "=?";
+        Log.d(LOG_TAG + "movietype in cursor", mMovietype);
+        String[] selectionArgs = new String[]{mMovietype};
         return new android.support.v4.content.CursorLoader(getActivity(), MoviesProvider.Movies.CONTENT_URI, null,
                 selection, selectionArgs, null);
     }
 
     @Override
     public void onLoadFinished(android.support.v4.content.Loader loader, Cursor data) {
-        Log.d(LOG_TAG+"count cursor", String.valueOf(data.getCount()));
-         mGridviewAdapter=new GridviewAdapter(getContext(),data);
+        Log.d(LOG_TAG + "count cursor", String.valueOf(data.getCount()));
+        mGridviewAdapter = new GridviewAdapter(getContext(), data);
         gridview.setAdapter(mGridviewAdapter);
     }
 

@@ -5,14 +5,18 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -61,17 +65,20 @@ public class DetailActivity extends AppCompatActivity
     RecyclerView recyclervie_cast;
     @BindView(R.id.ratingBar)
     RatingBar rating;
-    private Target mTarget;
     @BindView(R.id.detail_toolbar)
     Toolbar toolbar;
+    @BindView(R.id.app_bar_layout)
+    AppBarLayout appBarLayout;
     @BindView(R.id.title_layout)
     LinearLayout title_layout;
+    private Target mTarget;
     private Bitmap movieBackgraoundBitmap;
     private YouTubePlayerFragment mfrag;
     private Movie.results mMovieObject;
     private List<CastAndCrew.cast> mCastList;
     private List<Movie.results> mSimilarMoviesList;
     private ArrayList<Videos.results> mVideoList;
+    private int mColor;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,10 +87,34 @@ public class DetailActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mColor = ContextCompat.getColor(this, R.color.statusBarColor);
+        loadDataAndUpdate();
+        setStatusBarColor();
 
+    }
+
+    private void setStatusBarColor() {
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                int totalScroll = appBarLayout.getTotalScrollRange();
+                int currentScroll = totalScroll + verticalOffset;
+                Window window = getWindow();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    if ((currentScroll) < 255)
+                        window.setStatusBarColor(mColor);
+                    else
+                        window.setStatusBarColor(ContextCompat.getColor(DetailActivity.this, android.R.color.transparent));
+                }
+            }
+        });
+    }
+
+
+    private void loadDataAndUpdate() {
         mfrag = (YouTubePlayerFragment) getFragmentManager().findFragmentById(R.id.youtubeplayer_fragment);
         if (getIntent() != null) {
             mMovieObject = getIntent().getParcelableExtra(EXTRA_MOVIEOBJECT);
@@ -110,6 +141,16 @@ public class DetailActivity extends AppCompatActivity
         }
     }
 
+    // A method to find height of the status bar
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
     private void getCastData() {
         MovieEndpoints movieEndpointsService = NetworkUtilities.getClient();
         Call<CastAndCrew> call = movieEndpointsService.getCastAndCrew(mMovieObject.getId(), MainActivity.API_KEY);
@@ -129,19 +170,6 @@ public class DetailActivity extends AppCompatActivity
         });
     }
 
-   /* private void updateHorizontalList() {
-        for(CastAndCrew.cast castObject:mCastList)
-        {
-            ImageView castImageView=new ImageView(this);
-            castImageView.setLayoutParams(new LinearLayout.LayoutParams(150,150));
-            castImageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            castImageView.setAdjustViewBounds(true);
-            Picasso.with(this)
-                    .load(MainActivity.IMAGE_BASE_URL + "w185/" + castObject.getProfile_path())
-                    .into(castImageView);
-            cast_linearlayout.addView(castImageView);
-        }
-    }*/
 
     @Override
     protected void onStart() {
@@ -153,8 +181,6 @@ public class DetailActivity extends AppCompatActivity
         title_tv.setText(mMovieObject.getOriginal_title());
         description_tv.setText(mMovieObject.getOverview());
         downloadImageBitmap();
-
-
     }
 
     private void downloadImageBitmap() {
@@ -166,13 +192,21 @@ public class DetailActivity extends AppCompatActivity
                 Palette.from(movieBackgraoundBitmap).generate(new Palette.PaletteAsyncListener() {
                     public void onGenerated(Palette palette) {
                         Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
+                        Palette.Swatch vibrantDarkSwatch = palette.getDarkVibrantSwatch();
                         if (vibrantSwatch != null) {
-                            title_layout.setBackgroundColor(vibrantSwatch.getRgb());
+                            mColor = vibrantSwatch.getRgb();
+                            title_layout.setBackgroundColor(mColor);
                             title_tv.setTextColor(vibrantSwatch.getTitleTextColor());
                             toolbar.setTitleTextColor(vibrantSwatch.getBodyTextColor());
                             final Drawable upArrow = ContextCompat.getDrawable(DetailActivity.this,
                                     android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material);
                             upArrow.setColorFilter(vibrantSwatch.getBodyTextColor(), PorterDuff.Mode.SRC_ATOP);
+                            if (android.os.Build.VERSION.SDK_INT >= 21) {
+                                Window window = getWindow();
+                                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                                window.setStatusBarColor(ContextCompat.getColor(DetailActivity.this, android.R.color.transparent));
+                            }
                         }
                     }
                 });

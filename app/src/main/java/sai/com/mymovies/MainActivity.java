@@ -6,6 +6,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
     @BindView(R.id.viewpager)
     ViewPager viewPager;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,10 +33,19 @@ public class MainActivity extends AppCompatActivity {
         NetworkUtilities.ScheduleMoviesJobService(this, "top_rated");
         NetworkUtilities.ScheduleMoviesJobService(this, "now_playing");
         MyPagerAdapter myPagerAdapter=new MyPagerAdapter(getSupportFragmentManager());
-
+        setSupportActionBar(toolbar);
         viewPager.setAdapter(myPagerAdapter);
         
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater=getMenuInflater();
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
     public  class MyPagerAdapter extends FragmentStatePagerAdapter {
         private  int NUM_ITEMS = 4;
 

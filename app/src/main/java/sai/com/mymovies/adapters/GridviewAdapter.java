@@ -79,6 +79,8 @@ public class GridviewAdapter extends CursorAdapter {
 
         Picasso.with(context)
                 .load(MainActivity.IMAGE_BASE_URL + "w185/" + cursor.getString(cursor.getColumnIndex(MovieFields.Column_posterPath)))
+                .placeholder(R.drawable.ic_movie_black_48dp)
+                .error(R.drawable.ic_movie_black_48dp)
                 .into(imageView);
        /* Glide
                 .with(context)

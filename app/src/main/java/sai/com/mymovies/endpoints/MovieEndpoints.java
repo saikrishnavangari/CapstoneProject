@@ -39,5 +39,9 @@ public interface MovieEndpoints {
     Call<Movie> getSimilarMovies(
             @Path("movie_id") int movie_id,
             @Query("api_key") String api_key);
+    @GET("search/movie")
+    Call<Movie> getSearchMovies(
+            @Query("api_key") String api_key,
+            @Query("query") String query);
 
 }

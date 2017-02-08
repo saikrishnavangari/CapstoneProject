@@ -1,5 +1,7 @@
 package sai.com.mymovies.sync;
 
+import android.util.Log;
+
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 
@@ -8,6 +10,7 @@ import com.firebase.jobdispatcher.JobService;
  */
 
 public class MoviesDataJobService extends JobService {
+    private static String LOG_TAG=MoviesDataJobService.class.getSimpleName();
     JobParameters mJobParams;
     SyncMoviesData mSyncMoviesData;
 
@@ -16,6 +19,7 @@ public class MoviesDataJobService extends JobService {
         mJobParams = jobParams;
         mSyncMoviesData =new SyncMoviesData();
         mSyncMoviesData.getMoviesData(mJobParams.getTag(), this);
+        Log.d(LOG_TAG+jobParams.getTag(),"implemented");
         return true;
     }
 

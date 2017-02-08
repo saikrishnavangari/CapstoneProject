@@ -5,4 +5,10 @@
     <string name="related_movies">Related Movies</string>
     <string name="movie_images">movieimages</string>
     <string name="movie_detail_images">movie information</string>
+    <string name="empty_movieList">No movies</string>
+    <string name="action_search">search movies</string>
+    <string name="action_settings">settings</string>
+    <string name="search_hint">enter movie name</string>
+    <string name="empty_searchList">Sorry there is no match in the databse , Please try with a different movie name</string>
+    <string name="searchactivity_titile">Search Results</string>
 </resources>

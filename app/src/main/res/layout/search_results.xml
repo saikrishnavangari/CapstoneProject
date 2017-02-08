@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:titleTextColor="@color/white"
+            />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
+    <GridView
+
+        android:id="@+id/gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:verticalSpacing="@dimen/eightdp"
+        android:horizontalSpacing="@dimen/eightdp"
+        android:stretchMode="columnWidth"
+        android:numColumns="2"
+        android:nestedScrollingEnabled="true"
+        android:layout_marginStart="@dimen/activity_horizontal_spacing"
+        android:layout_marginEnd="@dimen/activity_horizontal_spacing"/>
+
+        <TextView
+            android:id="@+id/empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:visibility="invisible"
+            android:text="@string/empty_searchList"
+            android:textAppearance="?android:textAppearanceLarge" />
+    </FrameLayout>
+    </LinearLayout>

@@ -2,6 +2,7 @@ package sai.com.mymovies.sync;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import sai.com.mymovies.utiities.NetworkUtilities;
 
 public class SyncMoviesData {
     private static final String LOG_TAG = SyncMoviesData.class.getSimpleName();
+    public static final String ACTION_DATA_UPDATED = "sai.com.mymovies.ACTION_DATA_UPDATED";
     private Context mContext;
     private String mMovie_type;
     private Call<Movie> mCall;
@@ -41,6 +43,7 @@ public class SyncMoviesData {
                 for (Movie.results movie :moviesList) {
                     Log.d(LOG_TAG, movie.toString());
                 }*/
+                if((!mContext.getClass().getSimpleName().equals(MainActivity.class.getSimpleName())))
                 ((MoviesDataJobService) mContext).jobCompleted();
             }
 
@@ -60,7 +63,7 @@ public class SyncMoviesData {
         mContext.getContentResolver().delete(MoviesProvider.Movies.CONTENT_URI,selection,selectionArgs);
         ContentValues values = new ContentValues();
         for (Movie.results movie : movies) {
-            Log.d("jobservice movietype :"+mMovie_type, movie.getOriginal_title());
+
             values.put(MovieFields.Column_movieId, movie.getId());
             values.put(MovieFields.Column_TITLE, movie.getTitle());
             values.put(MovieFields.Column_voteCount, movie.getVote_count());
@@ -74,7 +77,10 @@ public class SyncMoviesData {
             values.put(MovieFields.Column_movieType, mMovie_type);
             mContext.getContentResolver().insert(MoviesProvider.Movies.CONTENT_URI,values);
         }
-
+        if(mMovie_type.equals("upcoming")){
+            Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED);
+            mContext.sendBroadcast(dataUpdatedIntent);
+        }
 
     }
 

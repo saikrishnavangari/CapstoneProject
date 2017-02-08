@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="titleTextBackground">#493207</color>
+
+    <color name="titleTextBackground">#5d4037</color>
+    <color name="statusBarColor">#FF3E2723</color>
     <color name="titleText">#ffffff</color>
     <color name="white">#ffffff</color>
     <color name="colorPrimary">#3F51B5</color>
@@ -8,4 +10,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="indigo">#f9c701</color>
     <color name="yellow">#f9c701</color>
+    <color name="lightblack">#bdbdbd</color>
 </resources>

@@ -9,8 +9,8 @@
     android:clipToPadding="false"
     >
     <ImageView
-        android:layout_width="60dp"
-        android:layout_height="75dp"
+        android:layout_width="75dp"
+        android:layout_height="90dp"
         android:id="@+id/image_scrollview"
         android:scaleType="fitXY"
         android:adjustViewBounds="true"
