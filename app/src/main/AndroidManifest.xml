@@ -23,7 +23,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".SearchActivity"
+            android:name=".OptionalMovieListActivity"
             android:parentActivityName=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />

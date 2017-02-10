@@ -27,9 +27,9 @@ import sai.com.mymovies.utiities.NetworkUtilities;
  * Created by krrish on 5/02/2017.
  */
 
-public class SearchActivity extends AppCompatActivity {
+public class OptionalMovieListActivity extends AppCompatActivity {
     public static String EXTRA_QUERY = "query";
-    private static String LOG_TAG = SearchActivity.class.getSimpleName();
+    private static String LOG_TAG = OptionalMovieListActivity.class.getSimpleName();
     @BindView(R.id.gridview)
     GridView gridview;
     @BindView(R.id.empty_view)
@@ -47,7 +47,7 @@ public class SearchActivity extends AppCompatActivity {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent DetailActivityIntent = new Intent(SearchActivity.this, DetailActivity.class);
+                Intent DetailActivityIntent = new Intent(OptionalMovieListActivity.this, DetailActivity.class);
                 DetailActivityIntent.putExtra(DetailActivity.EXTRA_MOVIEOBJECT, mSearchAdapter.getItem(position));
                 startActivity(DetailActivityIntent);
             }
@@ -71,7 +71,7 @@ public class SearchActivity extends AppCompatActivity {
                 mSearchMoviesList = movieResponse.getResults();
                 if (mSearchMoviesList.size() > 0) {
                     Log.d("hello", mSearchMoviesList.get(0).toString());
-                    mSearchAdapter = new SearchMoviesAdapter(SearchActivity.this, mSearchMoviesList);
+                    mSearchAdapter = new SearchMoviesAdapter(OptionalMovieListActivity.this, mSearchMoviesList);
                     gridview.setAdapter(mSearchAdapter);
                 } else
                     emptyView.setVisibility(View.VISIBLE);

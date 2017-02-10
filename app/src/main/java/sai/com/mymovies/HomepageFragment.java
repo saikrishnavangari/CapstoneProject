@@ -102,8 +102,8 @@ public class HomepageFragment extends android.support.v4.app.Fragment implements
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d("onQueryTextSubmit", query);
-                Intent searchResultIntent = new Intent(getActivity(), SearchActivity.class);
-                searchResultIntent.putExtra(SearchActivity.EXTRA_QUERY, query);
+                Intent searchResultIntent = new Intent(getActivity(), OptionalMovieListActivity.class);
+                searchResultIntent.putExtra(OptionalMovieListActivity.EXTRA_QUERY, query);
                 startActivity(searchResultIntent);
                 return true;
             }

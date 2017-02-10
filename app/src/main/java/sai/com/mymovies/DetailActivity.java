@@ -1,6 +1,7 @@
 package sai.com.mymovies;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -8,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
@@ -15,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -34,11 +37,13 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import sai.com.mymovies.adapters.HorizontalCastAdapter;
 import sai.com.mymovies.adapters.SimilarMoviesAdapter;
+import sai.com.mymovies.data.MoviesProvider;
 import sai.com.mymovies.endpoints.MovieEndpoints;
 import sai.com.mymovies.model.CastAndCrew;
 import sai.com.mymovies.model.Movie;
@@ -69,6 +74,8 @@ public class DetailActivity extends AppCompatActivity
     Toolbar toolbar;
     @BindView(R.id.app_bar_layout)
     AppBarLayout appBarLayout;
+    @BindView(R.id.favourite_iv)
+    FloatingActionButton favourite_iv;
     @BindView(R.id.title_layout)
     LinearLayout title_layout;
     private Target mTarget;
@@ -93,6 +100,32 @@ public class DetailActivity extends AppCompatActivity
         mColor = ContextCompat.getColor(this, R.color.statusBarColor);
         loadDataAndUpdate();
         setStatusBarColor();
+
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                Log.d("offset value", String.valueOf(verticalOffset));
+                if (Math.abs(verticalOffset) > 500) {
+                    //  Collapsed
+                    favourite_iv.setVisibility(View.INVISIBLE);
+
+                } else {
+                    favourite_iv.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    @OnClick(R.id.favourite_iv)
+    void onClick() {
+
+        Cursor cursor = getContentResolver().query(MoviesProvider.Movies.withId(mMovieObject.getId()), null,
+                null, null, null);
+        if (cursor == null) {
+            favourite_iv.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+        } else {
+            favourite_iv.setImageResource(R.drawable.ic_favorite_black_24dp);
+        }
 
     }
 
@@ -140,7 +173,6 @@ public class DetailActivity extends AppCompatActivity
             rating.setRating((float) (mMovieObject.getVote_average() / 2));
         }
     }
-
 
 
     private void getCastData() {
