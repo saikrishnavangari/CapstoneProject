@@ -12,7 +12,7 @@ import android.view.MenuInflater;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import sai.com.mymovies.utiities.NetworkUtilities;
+import sai.com.mymovies.utiities.Utilities;
 
 public class MainActivity extends AppCompatActivity {
     public static final String API_KEY = "8496be0b2149805afa458ab8ec27560c";
@@ -29,10 +29,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        NetworkUtilities.ScheduleMoviesJobService(this, "popular");
-        NetworkUtilities.ScheduleMoviesJobService(this, "upcoming");
-        NetworkUtilities.ScheduleMoviesJobService(this, "top_rated");
-        NetworkUtilities.ScheduleMoviesJobService(this, "now_playing");
+        Utilities.ScheduleMoviesJobService(this, "popular");
+        Utilities.ScheduleMoviesJobService(this, "upcoming");
+        Utilities.ScheduleMoviesJobService(this, "top_rated");
+        Utilities.ScheduleMoviesJobService(this, "now_playing");
         MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         setSupportActionBar(toolbar);
         viewPager.setAdapter(myPagerAdapter);

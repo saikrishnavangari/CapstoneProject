@@ -21,7 +21,7 @@ import retrofit2.Response;
 import sai.com.mymovies.adapters.SearchMoviesAdapter;
 import sai.com.mymovies.endpoints.MovieEndpoints;
 import sai.com.mymovies.model.Movie;
-import sai.com.mymovies.utiities.NetworkUtilities;
+import sai.com.mymovies.utiities.Utilities;
 
 /**
  * Created by krrish on 5/02/2017.
@@ -30,7 +30,7 @@ import sai.com.mymovies.utiities.NetworkUtilities;
 public class OptionalMovieListActivity extends AppCompatActivity {
     public static String EXTRA_QUERY = "query";
     private static String LOG_TAG = OptionalMovieListActivity.class.getSimpleName();
-    @BindView(R.id.gridview)
+    @BindView(R.id.gridview_search)
     GridView gridview;
     @BindView(R.id.empty_view)
     TextView emptyView;
@@ -61,7 +61,7 @@ public class OptionalMovieListActivity extends AppCompatActivity {
 
     public void searchMovies() {
         String query = getIntent().getStringExtra(EXTRA_QUERY);
-        MovieEndpoints movieEndpointsService = NetworkUtilities.getClient();
+        MovieEndpoints movieEndpointsService = Utilities.getClient();
         Call<Movie> call = movieEndpointsService.getSearchMovies(MainActivity.API_KEY, query);
         call.enqueue(new Callback<Movie>() {
             @Override

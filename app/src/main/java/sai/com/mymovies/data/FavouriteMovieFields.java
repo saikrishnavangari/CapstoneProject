@@ -12,7 +12,7 @@ import static net.simonvt.schematic.annotation.DataType.Type.TEXT;
  * Created by krrish on 11/02/2017.
  */
 
-public interface Favourites {
+public interface FavouriteMovieFields {
 
 
     //Fields for the table Movies are declared here
@@ -58,12 +58,6 @@ public interface Favourites {
     @DataType(TEXT)
     @NotNull
     String Column_releaseDate = "releaseDate";
-    @DataType(TEXT)
-    @NotNull
-    String Column_movieType = "movieType";
-    @DataType(TEXT)
-    @NotNull
-    String Column_favourites = "favourites";
 
 
 }

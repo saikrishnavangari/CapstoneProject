@@ -1,5 +1,6 @@
 package sai.com.mymovies.utiities;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
@@ -13,14 +14,16 @@ import com.firebase.jobdispatcher.Trigger;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import sai.com.mymovies.data.MovieFields;
 import sai.com.mymovies.endpoints.MovieEndpoints;
+import sai.com.mymovies.model.Movie;
 import sai.com.mymovies.sync.MoviesDataJobService;
 
 /**
  * Created by krrish on 24/01/2017.
  */
 
-public class NetworkUtilities {
+public class Utilities {
 
     public static final String BASE_URL = "http://api.themoviedb.org/3/";
     private static final int END_TIME = 60 * 60 * 8;
@@ -65,6 +68,22 @@ public class NetworkUtilities {
                 .build();
 
         dispatcher.mustSchedule(myJob);
+    }
+
+    public static ContentValues getContentValues(Movie.results movieObject) {
+        ContentValues values = new ContentValues();
+        values.put(MovieFields.Column_movieId, movieObject.getId());
+        values.put(MovieFields.Column_TITLE, movieObject.getOriginal_title());
+        values.put(MovieFields.Column_voteCount, movieObject.getVote_count());
+        values.put(MovieFields.Column_posterPath, movieObject.getPoster_path());
+        values.put(MovieFields.Column_overview, movieObject.getOverview());
+        values.put(MovieFields.Column_popularity, movieObject.getPopularity());
+        values.put(MovieFields.Column_voteAverage, movieObject.getVote_average());
+        values.put(MovieFields.Column_language, movieObject.getOriginal_language());
+        values.put(MovieFields.Column_backdropPath, movieObject.getBackdrop_path());
+        values.put(MovieFields.Column_releaseDate, movieObject.getRelease_date());
+
+        return values;
     }
 }
 

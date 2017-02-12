@@ -26,6 +26,7 @@ import sai.com.mymovies.adapters.GridviewAdapter;
 import sai.com.mymovies.data.MovieFields;
 import sai.com.mymovies.data.MoviesProvider;
 import sai.com.mymovies.sync.SyncMoviesData;
+import sai.com.mymovies.widget.FavouriteMovies;
 
 /**
  * Created by krrish on 21/01/2017.
@@ -115,7 +116,16 @@ public class HomepageFragment extends android.support.v4.app.Fragment implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()) {
+            case R.id.action_favourites:
+                Intent intent = new Intent(getActivity(), FavouriteMovies.class);
+                startActivity(intent);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Nullable
@@ -130,7 +140,7 @@ public class HomepageFragment extends android.support.v4.app.Fragment implements
         }
 
         AdRequest adRequest = new AdRequest.Builder()
-                .setRequestAgent("android_studio:ad_template").build();
+                .build();
         adView.loadAd(adRequest);
        /* mGridviewAdapter = new GridviewAdapter(getActivity());
         gridview.setAdapter(mGridviewAdapter);*/
@@ -180,7 +190,7 @@ public class HomepageFragment extends android.support.v4.app.Fragment implements
     @Override
     public void onLoadFinished(android.support.v4.content.Loader loader, Cursor data) {
         Log.d(LOG_TAG + "count cursor", String.valueOf(data.getCount()));
-        mGridviewAdapter = new GridviewAdapter(getContext(), data);
+        mGridviewAdapter = new GridviewAdapter(getActivity(), data);
         gridview.setAdapter(mGridviewAdapter);
     }
 

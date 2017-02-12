@@ -2,7 +2,6 @@ package sai.com.mymovies.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,12 +42,13 @@ public class GridviewAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         imageView = (ImageView) view.findViewById(R.id.imageView);
 
-        Picasso.with(context)
-                .load(MainActivity.IMAGE_BASE_URL + "w185/" + cursor.getString(cursor.getColumnIndex(MovieFields.Column_posterPath)))
-                .placeholder(R.drawable.ic_movie_black_48dp)
-                .error(R.drawable.ic_movie_black_48dp)
-                .into(imageView);
-        Log.d(cursor.getString(cursor.getColumnIndex(MovieFields.Column_movieType)), cursor.getString(cursor.getColumnIndex(MovieFields.Column_TITLE)));
+        if (cursor != null) {
+            Picasso.with(context)
+                    .load(MainActivity.IMAGE_BASE_URL + "w185/" + cursor.getString(cursor.getColumnIndex(MovieFields.Column_posterPath)))
+                    .placeholder(R.drawable.ic_movie_black_48dp)
+                    .error(R.drawable.ic_movie_black_48dp)
+                    .into(imageView);
+        }
     }
 
     public Movie.results get(int position) {
@@ -68,5 +68,10 @@ public class GridviewAdapter extends CursorAdapter {
         }
 
         return movieObject;
+    }
+
+    @Override
+    public Cursor swapCursor(Cursor newCursor) {
+        return super.swapCursor(newCursor);
     }
 }

@@ -15,6 +15,11 @@ public class Reviews {
 
     public static class results {
         private String content;
+        private String author;
+
+        public String getAuthor() {
+            return author;
+        }
 
         public String getContent() {
             return content;

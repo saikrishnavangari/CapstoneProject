@@ -15,7 +15,7 @@ import sai.com.mymovies.data.MovieFields;
 import sai.com.mymovies.data.MoviesProvider;
 import sai.com.mymovies.endpoints.MovieEndpoints;
 import sai.com.mymovies.model.Movie;
-import sai.com.mymovies.utiities.NetworkUtilities;
+import sai.com.mymovies.utiities.Utilities;
 
 /**
  * Created by krrish on 25/01/2017.
@@ -31,7 +31,7 @@ public class SyncMoviesData {
     public void getMoviesData(String movie_type, Context context) {
         mContext = context;
         this.mMovie_type = movie_type;
-        MovieEndpoints movieEndpointsService = NetworkUtilities.getClient();
+        MovieEndpoints movieEndpointsService = Utilities.getClient();
 
         mCall = movieEndpointsService.getMovies(movie_type, MainActivity.API_KEY);
         mCall.enqueue(new Callback<Movie>() {

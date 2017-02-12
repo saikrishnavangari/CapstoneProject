@@ -46,4 +46,8 @@ public interface MovieEndpoints {
             @Query("api_key") String api_key,
             @Query("query") String query);
 
+    @GET("movie/{movie_id}/reviews")
+    Call<Reviews> getReviews(@Path("movie_id") int movie_id,
+                             @Query("api_key") String api_key);
+
 }

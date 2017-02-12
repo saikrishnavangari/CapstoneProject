@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
@@ -17,6 +18,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -43,12 +45,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import sai.com.mymovies.adapters.HorizontalCastAdapter;
 import sai.com.mymovies.adapters.SimilarMoviesAdapter;
+import sai.com.mymovies.data.MovieFields;
 import sai.com.mymovies.data.MoviesProvider;
 import sai.com.mymovies.endpoints.MovieEndpoints;
 import sai.com.mymovies.model.CastAndCrew;
 import sai.com.mymovies.model.Movie;
+import sai.com.mymovies.model.Reviews;
 import sai.com.mymovies.model.Videos;
-import sai.com.mymovies.utiities.NetworkUtilities;
+import sai.com.mymovies.utiities.Utilities;
+import sai.com.mymovies.widget.FavouriteMovies;
 
 /**
  * Created by krrish on 23/01/2017.
@@ -57,6 +62,7 @@ import sai.com.mymovies.utiities.NetworkUtilities;
 public class DetailActivity extends AppCompatActivity
         implements YouTubePlayer.OnInitializedListener, SimilarMoviesAdapter.ListItemClickListener {
     public static final String EXTRA_MOVIEOBJECT = "movie";
+    public static final String EXTRA_STARTEDINTENT = "startedintent";
     private static final String LOG_TAG = DetailActivity.class.getSimpleName();
     @BindView(R.id.title_tv)
     TextView title_tv;
@@ -64,6 +70,8 @@ public class DetailActivity extends AppCompatActivity
     TextView description_tv;
     @BindView(R.id.movieposter_iv)
     ImageView movieposter_iv;
+    @BindView(R.id.releasedate_tv)
+    TextView releaseDate;
     @BindView(R.id.scrollView_recyclerview_related_movies)
     RecyclerView recyclerview_related_movies;
     @BindView(R.id.recyclerview_cast)
@@ -72,6 +80,8 @@ public class DetailActivity extends AppCompatActivity
     RatingBar rating;
     @BindView(R.id.detail_toolbar)
     Toolbar toolbar;
+    @BindView(R.id.reviews_tv)
+    TextView reviews;
     @BindView(R.id.app_bar_layout)
     AppBarLayout appBarLayout;
     @BindView(R.id.favourite_iv)
@@ -100,7 +110,40 @@ public class DetailActivity extends AppCompatActivity
         mColor = ContextCompat.getColor(this, R.color.statusBarColor);
         loadDataAndUpdate();
         setStatusBarColor();
+        setAppBarOffsetListener();
+        CheckFavourite();
+    }
 
+    private void CheckFavourite() {
+
+        Cursor data = getContentResolver().query(MoviesProvider.FavouritesContract.withId(mMovieObject.getId()), null, null, null, null);
+        if (data.getCount() <= 0) {
+            favourite_iv.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            favourite_iv.setTag(R.drawable.ic_favorite_border_black_24dp);
+        } else {
+            favourite_iv.setImageResource(R.drawable.ic_favorite_black_24dp);
+            favourite_iv.setTag(R.drawable.ic_favorite_black_24dp);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                String intentStarted = getIntent().getStringExtra(EXTRA_STARTEDINTENT);
+                if (intentStarted != null && intentStarted.equals(FavouriteMovies.class.getSimpleName()))
+                    finish();
+                else
+                    NavUtils.navigateUpFromSameTask(this);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void setAppBarOffsetListener() {
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
@@ -116,17 +159,21 @@ public class DetailActivity extends AppCompatActivity
         });
     }
 
+
     @OnClick(R.id.favourite_iv)
     void onClick() {
-
-        Cursor cursor = getContentResolver().query(MoviesProvider.Movies.withId(mMovieObject.getId()), null,
-                null, null, null);
-        if (cursor == null) {
-            favourite_iv.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-        } else {
+        Integer resource = (Integer) favourite_iv.getTag();
+        if (resource == R.drawable.ic_favorite_border_black_24dp) {
             favourite_iv.setImageResource(R.drawable.ic_favorite_black_24dp);
+            favourite_iv.setTag(R.drawable.ic_favorite_black_24dp);
+            getContentResolver().insert(MoviesProvider.FavouritesContract.CONTENT_URI, Utilities.getContentValues(mMovieObject));
+        } else {
+            favourite_iv.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            favourite_iv.setTag(R.drawable.ic_favorite_border_black_24dp);
+            String selection = MovieFields.Column_movieId + "=?";
+            String[] selectionArgs = new String[]{String.valueOf(mMovieObject.getId())};
+            getContentResolver().delete(MoviesProvider.FavouritesContract.CONTENT_URI, selection, selectionArgs);
         }
-
     }
 
     private void setStatusBarColor() {
@@ -167,8 +214,10 @@ public class DetailActivity extends AppCompatActivity
                     .Builder(this).color(Color.BLACK)
                     .sizeResId(R.dimen.divider)
                     .build());
+            releaseDate.setText(mMovieObject.getRelease_date());
             getCastData();
             getSimilarMovies();
+            getReviews();
             UpdateUi();
             rating.setRating((float) (mMovieObject.getVote_average() / 2));
         }
@@ -176,7 +225,7 @@ public class DetailActivity extends AppCompatActivity
 
 
     private void getCastData() {
-        MovieEndpoints movieEndpointsService = NetworkUtilities.getClient();
+        MovieEndpoints movieEndpointsService = Utilities.getClient();
         Call<CastAndCrew> call = movieEndpointsService.getCastAndCrew(mMovieObject.getId(), MainActivity.API_KEY);
         call.enqueue(new Callback<CastAndCrew>() {
             @Override
@@ -253,7 +302,7 @@ public class DetailActivity extends AppCompatActivity
     }
 
     public void getSimilarMovies() {
-        MovieEndpoints movieEndpointsService = NetworkUtilities.getClient();
+        MovieEndpoints movieEndpointsService = Utilities.getClient();
         Call<Movie> call = movieEndpointsService.getSimilarMovies(mMovieObject.getId(), MainActivity.API_KEY);
         call.enqueue(new Callback<Movie>() {
             @Override
@@ -271,20 +320,8 @@ public class DetailActivity extends AppCompatActivity
         });
     }
 
-    @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
-
-        if ((!wasRestored) && mVideoList.size() > 0)
-            youTubePlayer.cueVideo(mVideoList.get(0).getKey());
-    }
-
-    @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-
-    }
-
     public void getmovieVideos() {
-        MovieEndpoints movieEndpointsService = NetworkUtilities.getClient();
+        MovieEndpoints movieEndpointsService = Utilities.getClient();
         Call<Videos> call = movieEndpointsService.getMovieVideos(mMovieObject.getId(), MainActivity.API_KEY);
         call.enqueue(new Callback<Videos>() {
             @Override
@@ -303,10 +340,52 @@ public class DetailActivity extends AppCompatActivity
     }
 
     @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
+
+        if ((!wasRestored) && mVideoList.size() > 0)
+            youTubePlayer.cueVideo(mVideoList.get(0).getKey());
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+
+    }
+
+
+    @Override
     public void onListItemClicked(Movie.results movieObject) {
         Intent DetailactivitIntent = new Intent(this, DetailActivity.class);
         DetailactivitIntent.putExtra(EXTRA_MOVIEOBJECT, movieObject);
         DetailactivitIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(DetailactivitIntent);
+    }
+
+    public void getReviews() {
+        MovieEndpoints movieEndpointsService = Utilities.getClient();
+        Call<Reviews> call = movieEndpointsService.getReviews(mMovieObject.getId(), MainActivity.API_KEY);
+        call.enqueue(new Callback<Reviews>() {
+            @Override
+            public void onResponse(Call<Reviews> call, Response<Reviews> response) {
+                Reviews reviewResponse = response.body();
+                ArrayList<Reviews.results> Reviewresults = reviewResponse.getResults();
+                StringBuilder content = new StringBuilder();
+                if (Reviewresults.size() > 0) {
+                    for (Reviews.results resultObject : Reviewresults) {
+                        int i = 0;
+                        Log.d("author", resultObject.getAuthor());
+                        content = content.append(resultObject.getAuthor() + ":" + resultObject.getContent() + "\n");
+                    }
+                    reviews.setText(content);
+                } else {
+                    reviews.setText(getString(R.string.noreviews_text));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Reviews> call, Throwable t) {
+
+            }
+        });
+
     }
 }

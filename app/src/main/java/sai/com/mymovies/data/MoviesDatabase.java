@@ -14,6 +14,6 @@ public final class MoviesDatabase {
 
     @Table(MovieFields.class)
     public static final String Movies = "movies";
-    @Table(Favourites.class)
+    @Table(FavouriteMovieFields.class)
     public static final String Favourites = "favourites";
 }

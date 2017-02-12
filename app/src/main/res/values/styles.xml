@@ -21,7 +21,21 @@
         <item name="colorControlActivated">@color/yellow</item>
     </style>
 
+    <style name="detailactivity_textviewAttributes_label" parent="android:TextAppearance">
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_spacing</item>
+        <item name="android:textAppearance">?android:textAppearanceLarge</item>
+        <item name="android:textSize">@dimen/subheadingTextSize</item>
+    </style>
+
+    <style name="detailactivity_textviewAttributes_labelContent" parent="android:TextAppearance">
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_spacing</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_spacing</item>
+        <item name="android:textSize">@dimen/bodyTextSize</item>
+    </style>
+
     <style name="DetailActivity" parent="AppTheme">
 
     </style>
+
+    <dimen name="subheadingTextSize">16sp</dimen>
 </resources>

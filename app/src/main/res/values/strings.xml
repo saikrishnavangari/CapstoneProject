@@ -12,4 +12,12 @@
     <string name="empty_searchList">Sorry there is no match in the databse , Please try with a different movie name</string>
     <string name="searchactivity_titile">Search Results</string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="action_favourites">Favourites</string>
+    <string name="reviews">Reviews</string>
+    <string name="noreviews_text">No reviews yet for this movie</string>
+
+    <!-- Ad Id Strings-->
+    <string name="Banner_Id">ca-app-pub-9584061296347654/7810596527</string>
+    <string name="release">Release Date :</string>
+
 </resources>

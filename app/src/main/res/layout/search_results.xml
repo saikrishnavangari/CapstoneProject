@@ -19,15 +19,14 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="@dimen/activity_horizontal_spacing"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <GridView
 
-            android:id="@+id/gridview"
+            android:id="@+id/gridview_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/activity_horizontal_spacing"
-            android:layout_marginStart="@dimen/activity_horizontal_spacing"
             android:horizontalSpacing="@dimen/eightdp"
             android:nestedScrollingEnabled="true"
             android:numColumns="2"
